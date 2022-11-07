@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class AuthController {
     @Autowired
     SesionRepository sesionRepository;
 
-    @GetMapping("/iniciarSesion")
-    public ResponseEntity<Object> iniciarSesion(@RequestBody DtLogin datosLogin) throws NoSuchFieldException, IllegalAccessException {
+    @PostMapping("/iniciarSesion")
+    public ResponseEntity<Object> iniciarSesion(@Valid @RequestBody DtLogin datosLogin) throws NoSuchFieldException, IllegalAccessException {
         Usuario usuario = usuarioRepo.findById(datosLogin.getCorreo());
         if(usuario == null){
             throw new ExcepcionNotFound("El usuario no existe.");

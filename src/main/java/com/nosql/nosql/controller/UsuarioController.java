@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -29,7 +30,7 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<Object> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Object> crearUsuario(@Valid @RequestBody Usuario usuario) {
         usuarioRepo.save(usuario);
         return ResponseHandler.generateResponse("Usuario creado con exito", HttpStatus.OK, null);
     }
