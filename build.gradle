@@ -30,6 +30,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.nosql.nosql.NosqlApplication',
+                'Class-Path': '/libs/*.jar'
+        )
+    }
+}
 
 tasks.named('test') {
     useJUnitPlatform()
