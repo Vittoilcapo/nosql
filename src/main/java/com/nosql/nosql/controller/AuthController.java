@@ -39,7 +39,9 @@ public class AuthController {
         }
         boolean existeSesion= sesionRepository.existsById(usuario.getIdSesion());
         if(existeSesion) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe una sesion con este usuario");
+            Map<String, Object> datosSesion = sesionRepository.findAll(usuario.getIdSesion());
+            datosSesion.put("idSesion", usuario.getIdSesion());
+            return ResponseHandler.generateResponse("Sesion recuperada", HttpStatus.OK, datosSesion);
         }
         Map<String, Object> datosSesion = new HashMap<>();
         UUID idSesion = UUID.randomUUID();
@@ -48,7 +50,7 @@ public class AuthController {
         datosSesion.put("carrito", usuario.getIdCarrito());
         datosSesion.put("fechaCreada", new Date());
         datosSesion.put("correoUsuario", datosLogin.getCorreo());
-        sesionRepository.create(idSesion, datosSesion);
+        sesionRepository.save(idSesion, datosSesion);
         datosSesion.put("idSesion", idSesion);
         return ResponseHandler.generateResponse("Sesion iniciada", HttpStatus.OK, datosSesion);
     }

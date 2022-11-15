@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.UUID;
 
 @Repository
 public class UsuarioRepo {
@@ -24,7 +23,6 @@ public class UsuarioRepo {
     }
 
     public void save(Usuario usuario) {
-        //redisTemplate.opsForValue().set(usuario.getCedula(), usuario.getDireccion().toString());
         hashOperations.put(KEY, usuario.getCorreo(), usuario);
     }
 
@@ -32,8 +30,10 @@ public class UsuarioRepo {
         return hashOperations.entries(KEY);
     }
 
-
     public Usuario findById(String correo) {
         return (Usuario) hashOperations.get(KEY,correo);
+    }
+    public Boolean existsById(String correo) {
+        return  hashOperations.hasKey(KEY,correo);
     }
 }

@@ -24,6 +24,6 @@ public class Usuario implements Serializable {
     @NotBlank
     private String contrasena;
     private String imagen;
-    private UUID idSesion= null;
+    private UUID idSesion;
     private String idCarrito;
 }

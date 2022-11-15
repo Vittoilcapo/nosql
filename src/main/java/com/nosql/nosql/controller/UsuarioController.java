@@ -3,6 +3,7 @@ package com.nosql.nosql.controller;
 import com.nosql.nosql.clases.Carrito;
 import com.nosql.nosql.clases.DtDatosProducto;
 import com.nosql.nosql.clases.Usuario;
+import com.nosql.nosql.clases.excepciones.Excepcion;
 import com.nosql.nosql.repository.CarritoRepository;
 import com.nosql.nosql.repository.UsuarioRepo;
 import com.nosql.nosql.response.ResponseHandler;
@@ -37,6 +38,9 @@ public class UsuarioController {
 
     @PostMapping()
     public ResponseEntity<Object> crearUsuario(@Valid @RequestBody Usuario usuario) {
+        if(usuarioRepo.existsById(usuario.getCorreo())){
+            throw new Excepcion("Ya existe un usuario con ese correo");
+        }
         Carrito carrito = new Carrito();
             carrito.setId(UUID.randomUUID().toString());
         carritoRepository.save(carrito);

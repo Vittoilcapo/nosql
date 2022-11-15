@@ -26,7 +26,7 @@ public class SesionRepository {
         hashOperations = this.redisTemplate.opsForHash();
     }
 
-    public void create(UUID id, Map<String, Object> datosSesion) {
+    public void save(UUID id, Map<String, Object> datosSesion) {
         datosSesion.forEach((nombre, valor) -> hashOperations.put(suffix+id.toString(),nombre, valor));
         redisTemplate.expire(suffix+id.toString(),60, TimeUnit.HOURS);
     }
@@ -34,6 +34,8 @@ public class SesionRepository {
     public boolean existsById(UUID id){
        return redisTemplate.hasKey(suffix+id);
     }
+
+
 
     public Map<String, Object> findAll(UUID id){
         return hashOperations.entries(suffix+id.toString());
