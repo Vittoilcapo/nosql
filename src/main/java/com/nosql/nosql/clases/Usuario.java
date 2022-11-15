@@ -25,4 +25,5 @@ public class Usuario implements Serializable {
     private String contrasena;
     private String imagen;
     private UUID idSesion= null;
+    private String idCarrito;
 }

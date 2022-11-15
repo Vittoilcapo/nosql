@@ -3,10 +3,12 @@ package com.nosql.nosql.controller;
 import com.nosql.nosql.clases.Producto;
 import com.nosql.nosql.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,5 +25,10 @@ public class ProductoController {
         productoRepository.save( new Producto(UUID.randomUUID().toString(),"Iphone 13", 5, 1500.00, true));
         productoRepository.save (new Producto(UUID.randomUUID().toString(),"RTX 4090", 0, 2000.00, true));
         productoRepository.save (new Producto(UUID.randomUUID().toString(),"Aire acondicionado", 50, 150.00, true));
+    }
+
+    @GetMapping()
+    public Map<String, Producto> obtenerProductos(){
+        return productoRepository.findAll();
     }
 }

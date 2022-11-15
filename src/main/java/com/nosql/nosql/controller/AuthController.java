@@ -34,7 +34,7 @@ public class AuthController {
         if(usuario == null){
             throw new ExcepcionNotFound("El usuario no existe.");
         }
-        if(usuario.getContrasena().equals(datosLogin.getContrasena())){
+        if(!usuario.getContrasena().equals(datosLogin.getContrasena())){
             throw new ExcepcionNotFound("Contraseña incorrecta.");
         }
         boolean existeSesion= sesionRepository.existsById(usuario.getIdSesion());
@@ -45,7 +45,7 @@ public class AuthController {
         UUID idSesion = UUID.randomUUID();
         usuario.setIdSesion(idSesion);
         usuarioRepo.save(usuario);
-        datosSesion.put("carrito", new HashMap<UUID, Integer>());
+        datosSesion.put("carrito", usuario.getIdCarrito());
         datosSesion.put("fechaCreada", new Date());
         datosSesion.put("correoUsuario", datosLogin.getCorreo());
         sesionRepository.create(idSesion, datosSesion);
