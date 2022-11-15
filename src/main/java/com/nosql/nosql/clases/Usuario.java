@@ -1,5 +1,6 @@
 package com.nosql.nosql.clases;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +23,10 @@ public class Usuario implements Serializable {
     @NotBlank
     private String correo;
     @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String contrasena;
     private String imagen;
     private UUID idSesion;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String idCarrito;
 }

@@ -1,8 +1,10 @@
 package com.nosql.nosql.controller;
 
+import com.nosql.nosql.clases.Carrito;
 import com.nosql.nosql.clases.DtLogin;
 import com.nosql.nosql.clases.Usuario;
 import com.nosql.nosql.clases.excepciones.ExcepcionNotFound;
+import com.nosql.nosql.repository.CarritoRepository;
 import com.nosql.nosql.repository.SesionRepository;
 import com.nosql.nosql.repository.UsuarioRepo;
 import com.nosql.nosql.response.ResponseHandler;
@@ -28,8 +30,12 @@ public class AuthController {
     @Autowired
     SesionRepository sesionRepository;
 
+    @Autowired
+    CarritoRepository carritoRepository;
+
+
     @PostMapping("/iniciarSesion")
-    public ResponseEntity<Object> iniciarSesion(@Valid @RequestBody DtLogin datosLogin) throws NoSuchFieldException, IllegalAccessException {
+    public ResponseEntity<Object> iniciarSesion(@Valid @RequestBody DtLogin datosLogin) {
         Usuario usuario = usuarioRepo.findById(datosLogin.getCorreo());
         if(usuario == null){
             throw new ExcepcionNotFound("El usuario no existe.");
@@ -37,21 +43,24 @@ public class AuthController {
         if(!usuario.getContrasena().equals(datosLogin.getContrasena())){
             throw new ExcepcionNotFound("Contraseña incorrecta.");
         }
+        Map<String, Object> datosSesion = new HashMap<>();
         boolean existeSesion= sesionRepository.existsById(usuario.getIdSesion());
         if(existeSesion) {
-            Map<String, Object> datosSesion = sesionRepository.findAll(usuario.getIdSesion());
+            datosSesion = sesionRepository.findAll(usuario.getIdSesion());
             datosSesion.put("idSesion", usuario.getIdSesion());
-            return ResponseHandler.generateResponse("Sesion recuperada", HttpStatus.OK, datosSesion);
+        }else {
+            UUID idSesion = UUID.randomUUID();
+            usuario.setIdSesion(idSesion);
+            usuarioRepo.save(usuario);
+            datosSesion.put("carrito", usuario.getIdCarrito());
+            datosSesion.put("fechaCreada", new Date());
+            datosSesion.put("correoUsuario", datosLogin.getCorreo());
+            sesionRepository.save(idSesion, datosSesion);
+            datosSesion.put("idSesion", idSesion);
         }
-        Map<String, Object> datosSesion = new HashMap<>();
-        UUID idSesion = UUID.randomUUID();
-        usuario.setIdSesion(idSesion);
-        usuarioRepo.save(usuario);
-        datosSesion.put("carrito", usuario.getIdCarrito());
-        datosSesion.put("fechaCreada", new Date());
-        datosSesion.put("correoUsuario", datosLogin.getCorreo());
-        sesionRepository.save(idSesion, datosSesion);
-        datosSesion.put("idSesion", idSesion);
+        String idcarrito = usuario.getIdCarrito();
+        Carrito carrito = carritoRepository.findById(UUID.fromString(usuario.getIdCarrito()));
+        datosSesion.put("carrito", carrito.getProductos());
         return ResponseHandler.generateResponse("Sesion iniciada", HttpStatus.OK, datosSesion);
     }
 }
