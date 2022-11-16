@@ -23,10 +23,8 @@ public class Usuario implements Serializable {
     @NotBlank
     private String correo;
     @NotBlank
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String contrasena;
     private String imagen;
     private UUID idSesion;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String idCarrito;
 }

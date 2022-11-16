@@ -43,6 +43,9 @@ public class CarritoController {
             if(producto ==null)
                 throw new ExcepcionNotFound("No existe el producto");
             boolean encontrado= false;
+            if(productoInfo.getCantidad() > producto.getStock()){
+                throw new ExcepcionNotFound("No hay suficiente stock disponible");
+            }
             for(DtDatosProducto carritoProd : productos) {
                 if(Objects.equals(carritoProd.getId(), productoInfo.getId())){
                     carritoProd.setCantidad(productoInfo.getCantidad());
