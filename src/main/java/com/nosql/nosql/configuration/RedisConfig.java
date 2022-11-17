@@ -18,7 +18,7 @@ public class RedisConfig {
         /*Docker config
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("redis", 6379);
         return new JedisConnectionFactory(redisStandaloneConfiguration);
-         */
+*/
         return new JedisConnectionFactory();
     }
 

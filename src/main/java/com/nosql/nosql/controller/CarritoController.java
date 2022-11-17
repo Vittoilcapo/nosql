@@ -3,6 +3,7 @@ package com.nosql.nosql.controller;
 import com.nosql.nosql.clases.Carrito;
 import com.nosql.nosql.clases.DtDatosProducto;
 import com.nosql.nosql.clases.Producto;
+import com.nosql.nosql.clases.excepciones.Excepcion;
 import com.nosql.nosql.clases.excepciones.ExcepcionNotFound;
 import com.nosql.nosql.repository.CarritoRepository;
 import com.nosql.nosql.repository.ProductoRepository;
@@ -36,16 +37,24 @@ public class CarritoController {
     public ResponseEntity<Object> agregarAlCarrito (@RequestBody DtDatosProducto productoInfo, @PathVariable(value = "sesion") String sesion) {
         Map<String, Object> datosSesion = sesionRepository.findAll(UUID.fromString(sesion));
         if(!datosSesion.isEmpty()){
+            if(productoInfo.getCantidad() <= 0){
+                throw new Excepcion("Cantidad a agregar invalida, debe ser mayor a 0");
+            }
+
             String idcarrito = (String) datosSesion.get("carrito");
             Carrito carrito = carritoRepository.findById(UUID.fromString(idcarrito));
             List<DtDatosProducto> productos = carrito.getProductos();
             Producto producto = productoRepository.findById(UUID.fromString(productoInfo.getId()));
+
             if(producto ==null)
                 throw new ExcepcionNotFound("No existe el producto");
+
             boolean encontrado= false;
             if(productoInfo.getCantidad() > producto.getStock()){
                 throw new ExcepcionNotFound("No hay suficiente stock disponible");
             }
+
+
             for(DtDatosProducto carritoProd : productos) {
                 if(Objects.equals(carritoProd.getId(), productoInfo.getId())){
                     carritoProd.setCantidad(productoInfo.getCantidad());

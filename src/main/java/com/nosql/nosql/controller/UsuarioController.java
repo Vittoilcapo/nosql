@@ -49,12 +49,5 @@ public class UsuarioController {
         return ResponseHandler.generateResponse("Usuario creado con exito", HttpStatus.OK, null);
     }
 
-    @PostMapping("/imagen")
-    public String crearUsuario2(@RequestParam("file") MultipartFile file) throws IOException, NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] base = file.getBytes();
-        //String base64 = Base64.getEncoder().encodeToString(base);
-        return Base64.getEncoder().encodeToString(md.digest(base));
-    }
 
 }
