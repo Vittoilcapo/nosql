@@ -2,6 +2,7 @@ package com.nosql.nosql.controller;
 
 import com.nosql.nosql.clases.Carrito;
 import com.nosql.nosql.clases.DtDatosProducto;
+import com.nosql.nosql.clases.DtUsuario;
 import com.nosql.nosql.clases.Usuario;
 import com.nosql.nosql.clases.excepciones.Excepcion;
 import com.nosql.nosql.repository.CarritoRepository;
@@ -17,9 +18,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -32,8 +31,13 @@ public class UsuarioController {
 
 
     @GetMapping()
-    public Map<String, Usuario> findAll(){
-        return usuarioRepo.findAll();
+    public List<DtUsuario> findAll(){
+        Map<String, Usuario> usuarios = usuarioRepo.findAll();
+        List<DtUsuario> usuarioList = new ArrayList<>();
+        for(Usuario usuario: usuarios.values()){
+            usuarioList.add(new DtUsuario(usuario.getNombre(), usuario.getApellido(), usuario.getCorreo(), usuario.getImagen(), usuario.getIdSesion()));
+        }
+        return  usuarioList;
     }
 
     @PostMapping()
@@ -48,6 +52,5 @@ public class UsuarioController {
         usuarioRepo.save(usuario);
         return ResponseHandler.generateResponse("Usuario creado con exito", HttpStatus.OK, null);
     }
-
 
 }
